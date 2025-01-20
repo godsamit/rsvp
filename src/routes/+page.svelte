@@ -4,7 +4,7 @@
   import IconDate from "~icons/mdi/calendar-plus";
 </script>
 
-<Card.Root class="max-w-sm p-4">
+<Card.Root class="max-w-sm p-4 self-center">
   <Card.Header>
     <Card.Title>RSVP</Card.Title>
     <Card.Description>Create an event and see who are coming. No login needed.</Card.Description>

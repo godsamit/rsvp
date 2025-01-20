@@ -3,8 +3,7 @@ import { z } from "zod";
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
-export const createEventSchema = z.object({
-  password: z.string().min(4).max(20),
+export const editEventSchema = z.object({
   title: z.string(),
   detail: z.string().optional(),
   picture: z.instanceof(File)
@@ -21,4 +20,4 @@ export const createEventSchema = z.object({
   address: z.string().optional(),
 })
 
-export type ICreateEventSchema = typeof createEventSchema;
+export type IEditEventSchema = typeof editEventSchema;

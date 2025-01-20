@@ -6,10 +6,11 @@
     type SuperValidated,
     type Infer,
     superForm,
+    fileProxy,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
   import PublishIcon from "~icons/mdi/publish"
-  
+  import LoadingIcon from "~icons/mdi/loading"
   import EditEventForm from "$lib/components/EditEventForm.svelte";
 
   let { data }: { data: { form: SuperValidated<Infer<ICreateEventSchema>> } } = $props()
@@ -18,30 +19,43 @@
   const form = superForm(data.form, {
     onSubmit({ formData }) {
       formData.set('timezoneOffset', `${timezoneOffset}`);
-      // console.log(formData.entries())
-      // return formData
     },
+    clearOnSubmit: "none",
+    multipleSubmits: "prevent",
     validators: zodClient(createEventSchema)
   })
-  const { form: formData, enhance } = form
+  const { form: formData, enhance, delayed } = form
+
+  const file = fileProxy(formData, "picture")
 
 </script>
-
-<form method="POST" use:enhance>
-  <Card.Root class="max-w-sm p-4">
-    <Card.Header>
-      <Card.Title>Create an Event</Card.Title>
-      <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
-    </Card.Header>
-    <Card.Content>
-      <div class="flex flex-col gap-2">
-        <EditEventForm form={form} formData={formData} isCreate={true}/>
-      </div>
-    </Card.Content>
-    <Card.Footer>
-      <Form.Button type="submit">
-        <PublishIcon /> Create Event
-      </Form.Button>
-    </Card.Footer>
-  </Card.Root>
-</form>
+<div class="my-16 self-center">
+  <form method="POST" enctype="multipart/form-data" use:enhance>
+    <Card.Root class="max-w-sm p-4">
+      <Card.Header>
+        <Card.Title>Create an Event</Card.Title>
+        <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
+      </Card.Header>
+      <Card.Content>
+        <div 
+          class={[
+            "flex flex-col gap-2 relative",
+            $delayed && "pointer-events-none"
+          ]}
+        >
+          {#if $delayed}
+            <div class="absolute -p-6 top-0 left-0 w-full h-full bg-gray-200 opacity-50 z-10 flex items-center justify-center">            
+              <LoadingIcon font-size="3rem" class="mt-1/2 z-20 animate-spin" />
+            </div>
+          {/if}
+          <EditEventForm form={form} formData={formData} isCreate={true} file={file}/>
+        </div>
+      </Card.Content>
+      <Card.Footer>
+        <Form.Button type="submit" disabled={!!$delayed}>
+          <PublishIcon /> Create Event
+        </Form.Button>
+      </Card.Footer>
+    </Card.Root>
+  </form>
+</div>

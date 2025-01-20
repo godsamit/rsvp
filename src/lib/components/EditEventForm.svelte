@@ -1,8 +1,10 @@
+<!-- This component does not initiate its own form and needs it passed in. -->
 <script lang="ts">
   import * as Form from "$lib/components/ui/form/index.js";
   import { Input } from "$lib/components/ui/input/index.js";
   import { Textarea } from "$lib/components/ui/textarea/index.js";
-  let { form, formData, isCreate } = $props();
+
+  let { form, formData, isCreate, file } = $props();
 </script>
 
 <Form.Field {form} name="title">
@@ -55,16 +57,18 @@
   </Form.Control>
   <Form.FieldErrors />
 </Form.Field>
-<Form.Field {form} name="detail">
+<Form.Field {form} name="picture">
   <Form.Control>
     {#snippet children({ props })}
       <Form.Label for="picture">Event Picture</Form.Label>
-      <Input
+      <input
         {...props}
-        bind:value={$formData.picture}
-        type="text"
+        bind:files={$file}
+        type="file"
+        accept="image/*"
         placeholder="Event Picture"
-      />
+        class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-base file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+        />
     {/snippet}
   </Form.Control>
   <Form.FieldErrors />
@@ -72,7 +76,7 @@
 <Form.Field {form} name="date">
   <Form.Control>
     {#snippet children({ props })}
-      <Form.Label for="date">
+      <Form.Label>
         Date
         <span class="text-destructive">*</span>
       </Form.Label>

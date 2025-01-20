@@ -13,15 +13,15 @@
     navigator.clipboard.writeText(eventLink);
     alert('Event link copied to clipboard!');
   }
-  // onMount(() => {
-  //   const timer = setTimeout(() => {
-  //     window.location.href = `/event/${eventId}`;
-  //   }, 5000);
+  onMount(() => {
+    const timer = setTimeout(() => {
+      window.location.href = `/event/${eventId}`;
+    }, 5000);
 
-  //   return () => clearTimeout(timer);
-  // });
+    return () => clearTimeout(timer);
+  });
 </script>
-<Card.Root>
+<Card.Root class="self-center">
   <Card.Header>
     <Card.Title>Your event has been created!</Card.Title>
   </Card.Header>
@@ -35,6 +35,8 @@
     </div>
   </Card.Content>
   <Card.Footer>
-    <Button>Go to your event</Button>
+    <a href={eventLink}>
+      <Button>Go to your event</Button>
+    </a>
   </Card.Footer>
 </Card.Root>
