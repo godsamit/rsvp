@@ -1,7 +1,5 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form/index.js";
-  import { Input } from "$lib/components/ui/input/index.js";
-  import { Textarea } from "$lib/components/ui/textarea/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
   import { createEventSchema, type ICreateEventSchema } from "./schema";
   import {
@@ -10,6 +8,7 @@
     superForm,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
+  import PublishIcon from "~icons/mdi/publish"
   
   import EditEventForm from "$lib/components/EditEventForm.svelte";
 
@@ -31,7 +30,7 @@
 <form method="POST" use:enhance>
   <Card.Root class="max-w-sm p-4">
     <Card.Header>
-      <Card.Title>Create an event</Card.Title>
+      <Card.Title>Create an Event</Card.Title>
       <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
     </Card.Header>
     <Card.Content>
@@ -40,7 +39,9 @@
       </div>
     </Card.Content>
     <Card.Footer>
-      <Form.Button type="submit">Submit</Form.Button>
+      <Form.Button type="submit">
+        <PublishIcon /> Create Event
+      </Form.Button>
     </Card.Footer>
   </Card.Root>
 </form>

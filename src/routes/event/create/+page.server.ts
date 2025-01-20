@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from "./$types";
-import { fail } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { createEventSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
@@ -41,6 +41,6 @@ export const actions: Actions = {
       return fail(500, { form, message: error.message });
     }
 
-    return { form, success: true, message: "Event created successfully!"}
+    throw redirect(302, `/event/success/${id}`);
   }
 }

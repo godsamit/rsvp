@@ -38,7 +38,7 @@
         />
       {/snippet}
     </Form.Control>
-    <Form.Description>This is your key to edit this event, remember it in case you wish to change the details later.</Form.Description>
+    <Form.Description>This is your key to edit this event. Remember it in case you wish to change the event details later!</Form.Description>
     <Form.FieldErrors />
   </Form.Field>
 {/if}
