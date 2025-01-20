@@ -3,16 +3,17 @@
   import * as Card from "$lib/components/ui/card/index.js";
   import IconDate from "~icons/mdi/calendar-plus";
 </script>
-<div class="flex items-center justify-center h-screen">
-  <Card.Root class="max-w-sm p-4">
-    <Card.Header>
-      <Card.Title>RSVP</Card.Title>
-      <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
-    </Card.Header>
-    <Card.Content>
+
+<Card.Root class="max-w-sm p-4">
+  <Card.Header>
+    <Card.Title>RSVP</Card.Title>
+    <Card.Description>Create an event and see who are coming. No login needed.</Card.Description>
+  </Card.Header>
+  <Card.Content>
+    <a href="/event/create">
       <Button>
-        <IconDate />Create an event
+        <IconDate /> Create an event
       </Button>
-    </Card.Content>
-  </Card.Root>
-</div>
+    </a>
+  </Card.Content>
+</Card.Root>

@@ -2,5 +2,6 @@
 	import '../app.css';
 	let { children } = $props();
 </script>
-
-{@render children()}
+<div class="flex items-center py-16 justify-center min-h-screen">
+	{@render children()}
+</div>
