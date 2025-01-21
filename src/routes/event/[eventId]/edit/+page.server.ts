@@ -68,10 +68,10 @@ export const actions: Actions = {
 
       // Get the event to update (using title as identifier)
       const { data: existingEvent, error: fetchError } = await supabase
-      .from('rsvp_event')
-      .select('id, picture')
-      .eq('id', id)
-      .single();
+        .from('rsvp_event')
+        .select('id, picture')
+        .eq('id', id)
+        .single();
 
       if (fetchError) {
         console.error(fetchError);

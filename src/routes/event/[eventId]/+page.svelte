@@ -8,12 +8,19 @@
   import SignUpForEventForm from "$lib/components/SignUpForEventForm.svelte";
 	import type { PageProps } from "./$types";
   import { page } from "$app/state";
+  import { onMount } from "svelte";
 	import AttendanceRow from "$lib/components/AttendanceRow.svelte";
 
-  let { data, form }: PageProps = $props()
+  let { data, form }: PageProps = $props();
+  let isMobile = false;
+  onMount(() => {
+    if (typeof navigator !== 'undefined') {
+        isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+  });
 
-  const needPassword = page.url.searchParams.get('needPassword')
-  let editAuthOpen = $state(needPassword === 'true')
+  const needPassword = page.url.searchParams.get('needPassword');
+  let editAuthOpen = $state(needPassword === 'true');
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -32,9 +39,6 @@
   }
 
   const googleMapsUrl = `https://www.google.com/maps/search/?q=${encodeURIComponent(data.event.address)}`;
-
-  // Mobile check using navigator.userAgent (basic approach)
-  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   const mobileMapsUrl = `geo:0,0?q=${encodeURIComponent(data.event.address)}`;
 
   const handleClick = () => {
