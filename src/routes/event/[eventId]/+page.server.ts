@@ -78,7 +78,7 @@ export const actions: Actions = {
     })
 
     if (error || !data) {
-      return fail(403, { message: error });
+      return fail(403, { message: error, password });
     }
 
     cookies.set(`auth_event_${eventId}`, password, {
