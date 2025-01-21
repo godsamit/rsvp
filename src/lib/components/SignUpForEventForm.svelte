@@ -11,7 +11,7 @@
   let showForm = $state(false);
 
   const form = superForm(data.form, {
-    validators: zodClient(participateEventSchema),
+    validators: zodClient(participateEventSchema(data.attendees)),
     resetForm: true,
     onResult({ result }) {
       if (result.type === "success") {
@@ -34,6 +34,7 @@
     action="/event/{eventId}?/attend" 
     use:enhance
   >
+    <h2 class="font-bold mb-2">Attend the Event</h2>
     <div class="flex items-start gap-2">
       <Form.Field 
         {form} 
@@ -64,7 +65,7 @@
         <Form.Control>
           {#snippet children({ props })}
             <Form.Label>
-              Password
+              Password (For Canceling)
               <span class="text-destructive">*</span>
             </Form.Label>
             <Input

@@ -24,7 +24,6 @@ export const actions: Actions = {
     const { password, title, detail, picture, address } = form.data;
 
     const utcDate = formData.get('utcDate')
-    console.log(utcDate)
 
     // generate unique ID to store in database
     const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 6);

@@ -1,8 +1,16 @@
 import { z } from "zod";
 
-export const participateEventSchema = z.object({
-  name: z.string().max(50),
-  password: z.string().min(4).max(20),
-})
+type IAttendee = {
+  name: string,
+  password: string
+}
 
-export type IParticipateEventSchema = typeof participateEventSchema;
+export const participateEventSchema = (attendees: IAttendee[]) => 
+  z.object({
+    name: z.string().max(50)
+      .refine((name) => 
+        !attendees.some((attendee) => attendee.name === name), 
+        { message: "Someone else with the same name is attending. Choose another name to avoid confusion!" }
+      ),
+    password: z.string().min(4),
+})

@@ -43,12 +43,11 @@
   const file = fileProxy(formData, "picture")
 
 </script>
-<div class="my-16 self-center">
+<div class="w-3/5 lg:w-1/2 max-w-xl my-16 self-center">
   <form method="POST" enctype="multipart/form-data" use:enhance>
-    <Card.Root class="max-w-sm p-4">
+    <Card.Root class="my-16 p-4">
       <Card.Header>
         <Card.Title>Edit Your Event</Card.Title>
-        <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
       </Card.Header>
       <Card.Content>
         <div 
