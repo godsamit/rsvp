@@ -1,5 +1,5 @@
 import type { PageServerLoad, Actions } from "./$types";
-import { fail, redirect } from "@sveltejs/kit";
+import { fail } from "@sveltejs/kit";
 import { superValidate } from "sveltekit-superforms";
 import { participateEventSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ params }) => {
   // Fetch event details from Supabase
   const { data, error: fetchError } = await supabase
     .from('rsvp_event')
-    .select('*')
+    .select('id, title, detail, picture, date, address')
     .eq('id', eventId)
     .single();
 
@@ -31,14 +31,15 @@ export const load: PageServerLoad = async ({ params }) => {
   }
 
   return {
-    form: superValidate(data, zod(participateEventSchema)),
+    form: superValidate(zod(participateEventSchema)),
     event: data,
     attendees: attendees || [],
   };
 }
 
 export const actions: Actions = {
-  default: async ({ request, params }) => {
+  attend: async ({ request, params }) => {
+    console.log("attend")
     const formData = await request.formData();
     const form = await superValidate(formData, zod(participateEventSchema));
 
@@ -58,6 +59,23 @@ export const actions: Actions = {
       console.error(error)
       fail(500, { form, message: "Failed to add participant"})
     }
-    throw redirect(303, `/event/${eventId}`);
+  },
+  confirmPassword: async ({ request, params }) => {
+    console.log("confirmPassword")
+    const formData = await request.formData();
+    const password = formData.get('password');
+
+    const { eventId } = params;
+
+    const { data, error } = await supabase.rpc('validate_event_password', {
+      event_id: eventId,
+      input_password: password
+    })
+
+    if (error || !data) {
+      fail(403, { message: "Invalid password" })
+    }
+
+    console.log("confirmed")
   }
 }

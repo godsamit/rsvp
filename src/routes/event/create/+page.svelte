@@ -9,9 +9,9 @@
     fileProxy,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
-  import PublishIcon from "~icons/mdi/publish"
-  import LoadingIcon from "~icons/mdi/loading"
-  import EditEventForm from "$lib/components/EditEventForm.svelte";
+  import IconPublish from "~icons/mdi/publish"
+  import IconLoading from "~icons/mdi/loading"
+  import EditEventFormFields from "$lib/components/EditEventFormFields.svelte";
 
   let { data }: { data: { form: SuperValidated<Infer<ICreateEventSchema>> } } = $props()
   let timezoneOffset = new Date().getTimezoneOffset();
@@ -45,15 +45,15 @@
         >
           {#if $delayed}
             <div class="absolute -p-6 top-0 left-0 w-full h-full bg-gray-200 opacity-50 z-10 flex items-center justify-center">            
-              <LoadingIcon font-size="3rem" class="mt-1/2 z-20 animate-spin" />
+              <IconLoading font-size="3rem" class="mt-1/2 z-20 animate-spin" />
             </div>
           {/if}
-          <EditEventForm form={form} formData={formData} isCreate={true} file={file}/>
+          <EditEventFormFields form={form} formData={formData} isCreate={true} file={file}/>
         </div>
       </Card.Content>
       <Card.Footer>
         <Form.Button type="submit" disabled={!!$delayed}>
-          <PublishIcon /> Create Event
+          <IconPublish /> Create Event
         </Form.Button>
       </Card.Footer>
     </Card.Root>
