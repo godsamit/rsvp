@@ -1,6 +1,6 @@
 import type { PageServerLoad, Actions } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
-import { superValidate } from "sveltekit-superforms";
+import { message, superValidate } from "sveltekit-superforms";
 import { createEventSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { supabase } from "$lib/supabaseClient";
@@ -47,7 +47,7 @@ export const actions: Actions = {
         if (error) {
           console.error("Error uploading picture")
           console.error(error);
-          return fail(500, { form, message: error.message });
+          return message(form, error.message, { status: 500 });
         }
       }
 
@@ -61,11 +61,11 @@ export const actions: Actions = {
   
       if (insertError) {
         console.error(insertError);
-        return fail(500, { form, message: insertError.message });
+        return message(form, insertError.message, { status: 500 });
       }
     } catch (error) {
       console.error(error);
-      return fail(500, { form, message: "An error occurred while creating the event" })
+      return message(form, "An error occurred when trying to create this event", { status: 400 });
     }
 
     throw redirect(302, `/event/success/${id}`);

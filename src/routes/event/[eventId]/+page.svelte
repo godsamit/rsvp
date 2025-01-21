@@ -1,38 +1,18 @@
 <script lang="ts">
-  import { Button, buttonVariants } from "$lib/components/ui/button/index.js";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-  import { type IParticipateEventSchema } from "./schema";
-  import {
-    type SuperValidated,
-    type Infer,
-  } from "sveltekit-superforms";
   import AddToCalendarDropdown from "$lib/components/AddToCalendarDropdown.svelte";
   import EditEventConfirmDialog from "$lib/components/EditEventConfirmDialog.svelte";
 
-  import IconEdit from "~icons/mdi/edit";
   import IconCalendar from "~icons/mdi/calendar";
   import IconLocation from "~icons/mdi/map-marker";
   import IconImage from "~icons/mdi/image";
   import SignUpForEventForm from "$lib/components/SignUpForEventForm.svelte";
+	import type { PageProps } from "./$types";
+  import { page } from "$app/state";
 
-  type IEvent = {
-    id: string;
-    title: string;  
-    picture?: string;  
-    detail?: string;  
-    date: string;  
-    address?: string;
-  }
+  let { data, form }: PageProps = $props()
 
-  type IAttendee = {
-    name: string;
-  }
-
-  let { data }: { data: { 
-    event: IEvent, 
-    attendees: IAttendee[], 
-    form: SuperValidated<Infer<IParticipateEventSchema>> 
-  }} = $props()
+  const needPassword = page.url.searchParams.get('needPassword')
+  let editAuthOpen = $state(needPassword === 'true')
 
   const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -49,9 +29,6 @@
       hour12: true,
     }).format(date);
   }
-  function formatDateForCalendar(date: string) {
-    return date.replace(/[-:]/g, "").split(".")[0] + "Z";
-  }
 
 </script>
 {#if data.event}
@@ -65,11 +42,11 @@
       </div>
     {/if}
   </header>
-  <section class="flex-1 w-4/5 mx-auto bg-white flex flex-col gap-4 p-5 shadow-sm">
+  <section class="flex-1 w-4/5 mx-auto bg-white flex flex-col gap-4 p-6 md:p-8 lg:p-12 xl:p-16 shadow-sm">
     <div class="flex justify-between">
       <h1 class="text-2xl md:text-3xl font-bold">{data.event.title}</h1>
       <div class="flex gap-2">
-        <EditEventConfirmDialog />
+        <EditEventConfirmDialog form={form} isOpen={editAuthOpen ?? false}/>
         <AddToCalendarDropdown data={data} userTimeZone={userTimeZone} />
       </div>
     </div>
@@ -107,5 +84,5 @@
   </section>
 </div>
 {:else}
-  <p class="text-red-500">Event not found.</p>
+  <p class="text-destructive">Event not found.</p>
 {/if}

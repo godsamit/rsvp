@@ -4,31 +4,57 @@
   import { Input } from "$lib/components/ui/input/index.js";
   import IconEdit from "~icons/mdi/edit";
   import { page } from "$app/state";
+  import { goto } from "$app/navigation";
   import { enhance } from "$app/forms";
 
-  const eventId = page.params.eventId;
-  console.log("edit dialog", eventId)
+  let { form, isOpen } = $props();
 
+  const eventId = page.params.eventId;
+
+  async function checkAuthAndNavigate() {
+    const response = await fetch(`/api/event/${eventId}/auth-check`);
+    const { isAuthenticated } = await response.json();
+
+    if (isAuthenticated) {
+      goto(`/event/${eventId}/edit`);
+    } else {
+      isOpen = true;
+    }
+  }
 </script>
 
-<Dialog.Root>
-  <Dialog.Trigger class={buttonVariants({ variant: "secondary", size: "default" })}>
+<Dialog.Root bind:open={
+  () => isOpen, 
+  (newOpen) => {
+    if (newOpen === true) {
+      checkAuthAndNavigate()
+    } else {
+      isOpen = false;
+    }
+  }}
+>
+  <Dialog.Trigger
+    class={buttonVariants({ variant: "secondary", size: "default" })}
+  >
     <IconEdit />
   </Dialog.Trigger>
-  <form method="POST" action="/event/{eventId}?/confirmPassword" use:enhance>
-    <Dialog.Content>
-      <Dialog.Header>
-        <Dialog.Title>Enter your password</Dialog.Title>
-        <Dialog.Description>
-          Confirm your password to edit the event!
-        </Dialog.Description>
-      </Dialog.Header>
-      <Input name="password" placeholder="Password" type="password" />
-      <Dialog.Footer>
+  <Dialog.Content>
+    <Dialog.Header>
+      <Dialog.Title>Enter your password</Dialog.Title>
+      <Dialog.Description>
+        Confirm your password to edit the event!
+      </Dialog.Description>
+    </Dialog.Header>
+    {#if form?.message}
+      <p class="text-destructive text-xs font-semibold">{form.message}</p>
+    {/if}
+    <form method="POST" action="/event/{eventId}?/confirmPassword" use:enhance>
+      <div class="flex flex-col gap-4">
+        <Input name="password" placeholder="Password" type="password" />
         <Button type="submit">
           Confirm Password
         </Button>
-      </Dialog.Footer>
-    </Dialog.Content>
-  </form>
+      </div>
+    </form>
+  </Dialog.Content>
 </Dialog.Root>

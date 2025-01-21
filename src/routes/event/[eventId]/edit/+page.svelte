@@ -1,18 +1,23 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
-  import { createEventSchema } from "./schema";
+  import { editEventSchema } from "./schema";
   import {
     superForm,
     fileProxy,
   } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
-  import IconPublish from "~icons/mdi/publish"
+  import IconSync from "~icons/mdi/sync"
+  import IconBackArrow from "~icons/mdi/keyboard-backspace";
   import IconLoading from "~icons/mdi/loading"
   import EditEventFormFields from "$lib/components/EditEventFormFields.svelte";
 	import type { PageProps } from "./$types";
+  import { page } from "$app/state";
+	import { goto } from "$app/navigation";
 
   let { data }: PageProps = $props()
+  const { eventId }= page.params
+  
   let timezoneOffset = new Date().getTimezoneOffset();
   
   const form = superForm(data.form, {
@@ -21,18 +26,22 @@
     },
     clearOnSubmit: "none",
     multipleSubmits: "prevent",
-    validators: zodClient(createEventSchema)
+    validators: zodClient(editEventSchema)
   })
   const { form: formData, enhance, delayed, message } = form
 
-  const file = fileProxy(formData, "picture")
+  // get timezone and convert to UTC to store in database
+  const utcDate = new Date($formData.date);
+  const localDate = new Date(utcDate.getTime() - timezoneOffset * 60000).toISOString();
+  $formData.date = localDate.slice(0, 16);
 
+  const file = fileProxy(formData, "picture")
 </script>
 <div class="my-16 self-center">
   <form method="POST" enctype="multipart/form-data" use:enhance>
     <Card.Root class="max-w-sm p-4">
       <Card.Header>
-        <Card.Title>Create an Event</Card.Title>
+        <Card.Title>Edit Your Event</Card.Title>
         <Card.Description>A simple event RSVP app. Create an event and see who are coming. No login needed.</Card.Description>
       </Card.Header>
       <Card.Content>
@@ -47,15 +56,18 @@
               <IconLoading font-size="3rem" class="mt-1/2 z-20 animate-spin" />
             </div>
           {/if}
-          {#if message}
+          {#if $message}
             <p class="text-destructive text-xs font-semibold">{$message}</p>
           {/if}
-          <EditEventFormFields form={form} formData={formData} isCreate={true} file={file}/>
+          <EditEventFormFields form={form} formData={formData} isCreate={false} file={file}/>
         </div>
       </Card.Content>
-      <Card.Footer>
+      <Card.Footer class="flex justify-between">
+        <Form.Button variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
+          <IconBackArrow /> Cancel Editing
+        </Form.Button>
         <Form.Button type="submit" disabled={!!$delayed}>
-          <IconPublish /> Create Event
+          <IconSync /> Update Event
         </Form.Button>
       </Card.Footer>
     </Card.Root>
