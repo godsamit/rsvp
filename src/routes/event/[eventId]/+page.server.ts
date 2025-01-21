@@ -78,7 +78,7 @@ export const actions: Actions = {
     })
 
     if (error || !data) {
-      return fail(403, { message: "Invalid password" });
+      return fail(403, { message: error });
     }
 
     cookies.set(`auth_event_${eventId}`, password, {
@@ -112,7 +112,7 @@ export const actions: Actions = {
     })
 
     if (error || !data) {
-      return fail(403, { message: "Invalid password" });
+      return fail(403, { message: error });
     }
     const { error: sessionError } = await supabase.rpc('set_session_var', {
       key: 'app.password',

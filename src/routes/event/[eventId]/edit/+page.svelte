@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as Form from "$lib/components/ui/form/index.js";
   import * as Card from "$lib/components/ui/card/index.js";
+  import { Button } from "$lib/components/ui/button/index.js";
   import { editEventSchema } from "./schema";
   import {
     superForm,
@@ -14,6 +15,7 @@
 	import type { PageProps } from "./$types";
   import { page } from "$app/state";
 	import { goto } from "$app/navigation";
+  import IconTrash from "~icons/mdi/trash-can";
 
   let { data }: PageProps = $props()
   const { eventId }= page.params
@@ -66,15 +68,31 @@
           {/if}
           <EditEventFormFields form={form} formData={formData} isCreate={false} file={file}/>
         </div>
+        <div class="my-6 flex justify-between">
+          <Form.Button type="button" variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
+            <IconBackArrow /> Cancel Editing
+          </Form.Button>
+          <Form.Button type="submit" disabled={!!$delayed}>
+            <IconSync /> Update Event
+          </Form.Button>
+        </div>
+        {#if data.attendees.length > 0}
+          <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees:</h1>
+          <ul class="py-4">
+            {#each data.attendees as attendee, index}
+            <li class={[
+              "px-2 py-1 flex justify-between items-center",
+              index % 2 !== 0 ? "bg-gray-100" : ""
+            ]}>
+              {attendee.name}
+                <Button size="icon" variant="destructive" class="w-6 h-6" title="Remove Attendance">
+                  <IconTrash />
+                </Button>
+              </li>
+            {/each}
+          </ul>
+        {/if}
       </Card.Content>
-      <Card.Footer class="flex justify-between">
-        <Form.Button type="button" variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
-          <IconBackArrow /> Cancel Editing
-        </Form.Button>
-        <Form.Button type="submit" disabled={!!$delayed}>
-          <IconSync /> Update Event
-        </Form.Button>
-      </Card.Footer>
     </Card.Root>
   </form>
 </div>
