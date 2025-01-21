@@ -15,7 +15,7 @@ export const editEventSchema = z.object({
   existingPicture: z.string().optional(),
   date: z.string()
     .refine(
-      (val) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(val), 
+      (val) => /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:00+00:00)?$/.test(val), 
       { message: "Invalid date format" }
     ),
   address: z.string().optional(),

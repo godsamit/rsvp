@@ -5,6 +5,7 @@ import { editEventSchema } from "./schema";
 import { zod } from "sveltekit-superforms/adapters";
 import { supabase } from "$lib/supabaseClient";
 import { error } from "@sveltejs/kit";
+
 export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
   const { eventId } = params;
   const isAuthenticated = cookies.get(`auth_event_${eventId}`);
@@ -20,8 +21,7 @@ export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
   const eventData = await eventResponse.json();
 
   const event = {
-    ...eventData, 
-    date: eventData.date.slice(0, 16),
+    ...eventData,
     existingPicture: eventData.picture,
     picture: undefined,
   }
@@ -48,13 +48,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { title, detail, picture, date, address } = form.data;
+    const { title, detail, picture, address } = form.data;
     const id = params.eventId;
 
-    // get timezone and convert to UTC to store in database
-    const localDate = new Date(date);
-    const timezoneOffset = Number(formData.get('timezoneOffset'))
-    const utcDate = new Date(localDate.getTime() - timezoneOffset * 60000).toISOString();
+    const utcDate = formData.get('utcDate')
 
     const password = cookies.get(`auth_event_${id}`);
     
@@ -96,7 +93,7 @@ export const actions: Actions = {
         }
 
         const { publicUrl } = supabase.storage.from('rsvp_pictures').getPublicUrl(uniqueFileName).data;
-        pictureUrl = publicUrl;
+        pictureUrl = publicUrl + `?t=${new Date().getTime()}`;
       }
 
       // Update the event in the database

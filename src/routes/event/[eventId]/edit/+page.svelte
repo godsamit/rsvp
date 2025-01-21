@@ -19,10 +19,11 @@
   const { eventId }= page.params
   
   let timezoneOffset = new Date().getTimezoneOffset();
+  let utcDate = $state(new Date(data.event.date).toISOString())
   
   const form = superForm(data.form, {
     onSubmit({ formData }) {
-      formData.set('timezoneOffset', `${timezoneOffset}`);
+      formData.set('utcDate', `${utcDate}`);
     },
     clearOnSubmit: "none",
     multipleSubmits: "prevent",
@@ -31,11 +32,16 @@
   const { form: formData, enhance, delayed, message } = form
 
   // get timezone and convert to UTC to store in database
-  const utcDate = new Date($formData.date);
-  const localDate = new Date(utcDate.getTime() - timezoneOffset * 60000).toISOString();
-  $formData.date = localDate.slice(0, 16);
+  const date = new Date($formData.date);
+  const localDate = new Date(date.getTime() - timezoneOffset * 60000).toISOString().slice(0, 16);
+  $formData.date = localDate;
+
+  $effect(() => {
+    utcDate = new Date($formData.date).toISOString()
+  })
 
   const file = fileProxy(formData, "picture")
+
 </script>
 <div class="my-16 self-center">
   <form method="POST" enctype="multipart/form-data" use:enhance>
@@ -63,7 +69,7 @@
         </div>
       </Card.Content>
       <Card.Footer class="flex justify-between">
-        <Form.Button variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
+        <Form.Button type="button" variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
           <IconBackArrow /> Cancel Editing
         </Form.Button>
         <Form.Button type="submit" disabled={!!$delayed}>

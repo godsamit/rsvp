@@ -35,6 +35,7 @@
 >
   <Dialog.Trigger
     class={buttonVariants({ variant: "secondary", size: "default" })}
+    title="Edit Event"
   >
     <IconEdit />
   </Dialog.Trigger>

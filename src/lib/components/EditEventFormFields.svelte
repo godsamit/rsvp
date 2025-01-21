@@ -7,7 +7,6 @@
 
   let { form, formData, isCreate, file } = $props();
 
-  console.log($formData.picture)
   let previewUrl = $formData.existingPicture
 </script>
 

@@ -21,12 +21,10 @@ export const actions: Actions = {
       return fail(400, { form });
     }
 
-    const { password, title, detail, picture, date, address } = form.data;
+    const { password, title, detail, picture, address } = form.data;
 
-    // get timezone and convert to UTC to store in database
-    const localDate = new Date(date);
-    const timezoneOffset = Number(formData.get('timezoneOffset'))
-    const utcDate = new Date(localDate.getTime() + timezoneOffset * 60000).toISOString();
+    const utcDate = formData.get('utcDate')
+    console.log(utcDate)
 
     // generate unique ID to store in database
     const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 6);
@@ -53,7 +51,7 @@ export const actions: Actions = {
 
       const { publicUrl } = supabase.storage.from("rsvp_pictures").getPublicUrl(uniqueFileName).data;
 
-      if (picture) pictureUrl = publicUrl
+      if (picture) pictureUrl = publicUrl + `?t=${new Date().getTime()}`
 
       const { error: insertError } = await supabase.from("rsvp_event").insert([
         { id, password, title, detail, picture: pictureUrl, date: utcDate, address }

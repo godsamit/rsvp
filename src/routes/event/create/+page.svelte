@@ -13,11 +13,11 @@
 	import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props()
-  let timezoneOffset = new Date().getTimezoneOffset();
+  let utcDate = $state("")
   
   const form = superForm(data.form, {
     onSubmit({ formData }) {
-      formData.set('timezoneOffset', `${timezoneOffset}`);
+      formData.set('utcDate', `${utcDate}`);
     },
     clearOnSubmit: "none",
     multipleSubmits: "prevent",
@@ -27,6 +27,10 @@
 
   const file = fileProxy(formData, "picture")
 
+  $effect(() => {
+    if ($formData.date === "") return
+    utcDate = new Date($formData.date).toISOString()
+  })
 </script>
 <div class="my-16 self-center">
   <form method="POST" enctype="multipart/form-data" use:enhance>
