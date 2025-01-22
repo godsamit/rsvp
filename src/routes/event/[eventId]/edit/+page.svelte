@@ -55,7 +55,9 @@
 <div class="w-9/10 sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 max-w-2xl self-center">
   <Card.Root class="my-2 md:my-16  p-4">
     <Card.Header>
-      <Card.Title>Edit Your Event</Card.Title>
+      <Card.Title>
+        Edit Your Event
+      </Card.Title>
     </Card.Header>
     <Card.Content>
       <form method="POST" action="/event/{eventId}/edit?/update" enctype="multipart/form-data" use:enhance>
@@ -85,8 +87,9 @@
         </div>
       </form>
       {#if data.attendees.length > 0}
-        <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees:</h1>
-        <ul class="py-4">
+        <hr class="my-10" />
+        <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees</h1>
+        <ul class="pt-4">
           {#each data.attendees as attendee, index}
             <form method="POST" action="/event/{eventId}/edit?/cancelAttendance" use:svelteEnhance>
               <li class={[
@@ -103,9 +106,8 @@
           {/each}
         </ul>
       {/if}
-    </Card.Content>
-    <Card.Footer>
+      <hr class="my-10" />
       <DeleteEvent />
-    </Card.Footer>
+    </Card.Content>
   </Card.Root>
 </div>

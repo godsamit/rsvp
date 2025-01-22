@@ -72,7 +72,7 @@
           {/if}
       </span>
     </div>
-    <p> {data.event.detail ?? "The organizer has not provided details for this event."}</p>
+    <p class="whitespace-pre-wrap"> {data.event.detail ?? "The organizer has not provided details for this event."}</p>
     <div class="flex flex-col justify-end gap-2">
       <p><strong>Attendees ({data.attendees.length ?? 0})</strong></p>
       {#if data.attendees.length === 0}
