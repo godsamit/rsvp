@@ -7,7 +7,9 @@
 
   let { form, formData, isCreate, file } = $props();
 
-  let previewUrl = $formData.existingPicture
+  let previewUrl = $formData.existingPicture;
+
+  let today = new Date().toISOString().slice(0, 16);
 </script>
 
 <Form.Field {form} name="title">
@@ -89,6 +91,7 @@
       </Form.Label>
       <Input
         {...props}
+        min={today}
         bind:value={$formData.date}
         type="datetime-local"
         placeholder="Date"

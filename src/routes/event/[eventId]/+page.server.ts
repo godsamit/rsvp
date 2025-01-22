@@ -34,12 +34,10 @@ export const actions: Actions = {
   attend: async ({ request, params }) => {
     const formData = await request.formData();
 
-    const baseSchema = z.object({
-      name: z.string().max(50),
-      password: z.string().min(4),
-    });
-
-    const form = await superValidate(formData, zod(baseSchema));
+    const attendeesJSON = formData.get('attendees')?.toString();
+    const attendees = JSON.parse(attendeesJSON || '[]');
+  
+    const form = await superValidate(formData, zod(participateEventSchema(attendees)));
 
     if (!form.valid) {
       return fail(400, { form });

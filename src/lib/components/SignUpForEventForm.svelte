@@ -13,6 +13,9 @@
   const form = superForm(data.form, {
     validators: zodClient(participateEventSchema(data.attendees)),
     resetForm: true,
+    onSubmit({ formData }) {
+      formData.set('attendees', JSON.stringify(data.attendees));
+    },
     onResult({ result }) {
       if (result.type === "success") {
         showForm = false;
@@ -23,13 +26,12 @@
   const { form: formData, enhance } = form
 </script>
 
-
 {#if !showForm}
   <Button class="w-full" onclick={() => showForm = true}>
     <IconAdd /> Attend This Event!
   </Button>
 {:else}
-  <form 
+  <form
     method="POST" 
     action="/event/{eventId}?/attend" 
     use:enhance
@@ -38,7 +40,7 @@
       <h2 class="font-bold mb-2">Attend This Event</h2>
       <div class="flex flex-col md:flex-row items-start gap-2">
         <Form.Field 
-          {form} 
+          {form}
           name="name"
           class="w-full md:basis-1/2"
         >
@@ -58,8 +60,8 @@
           </Form.Control>
           <Form.FieldErrors />
         </Form.Field>
-        <Form.Field 
-          {form} 
+        <Form.Field
+          {form}
           name="password"
           class="w-full md:basis-1/2"
         >
@@ -82,9 +84,9 @@
           </Form.Description>
           <Form.FieldErrors />
         </Form.Field>
-        <Form.Button class="mt-8" type="submit">
+        <Button type="submit" class="mt-8">
           <IconAdd /> Attend
-        </Form.Button>
+        </Button>
       </div>
     </div>
   </form>

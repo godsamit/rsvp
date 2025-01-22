@@ -76,9 +76,9 @@
           <EditEventFormFields form={form} formData={formData} isCreate={false} file={file}/>
         </div>
         <div class="my-6 flex justify-between">
-          <Form.Button type="button" variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
+          <Button type="button" variant="secondary" onclick={() => goto(`/event/${eventId}`)}>
             <IconBackArrow /> Cancel Editing
-          </Form.Button>
+          </Button>
           <Form.Button type="submit" disabled={!!$delayed}>
             <IconSync /> Update Event
           </Form.Button>
