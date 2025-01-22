@@ -16,6 +16,7 @@
   import { page } from "$app/state";
 	import { goto } from "$app/navigation";
   import IconTrash from "~icons/mdi/trash-can";
+  import { enhance as svelteEnhance } from "$app/forms";
 
   let { data }: PageProps = $props()
   const { eventId }= page.params
@@ -86,7 +87,7 @@
         <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees:</h1>
         <ul class="py-4">
           {#each data.attendees as attendee, index}
-            <form method="POST" action="/event/{eventId}/edit?/cancelAttendance" use:enhance>
+            <form method="POST" action="/event/{eventId}/edit?/cancelAttendance" use:svelteEnhance>
               <li class={[
                 "px-2 py-1 flex justify-between items-center",
                 index % 2 !== 0 ? "bg-gray-100" : ""

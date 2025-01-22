@@ -125,6 +125,6 @@ export const actions: Actions = {
       return fail(500, { message: cancelError.message });
     }
 
-    return { success: true}
+    return { success: true }
   }
 }
