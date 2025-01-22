@@ -35,7 +35,7 @@
   };
 </script>
 <a class="fixed top-8 left-8 md:left-16 lg:left-30 xl:left-48 z-50 shadow-lg" href="/">
-  <Button size="icon"><IconHome /></Button>
+  <Button class="w-12 h-12 p-2"><IconHome font-size="2rem" /></Button>
 </a>
 {#if data.event}
 <div class="min-h-full w-full flex flex-col">

@@ -17,6 +17,7 @@
 	import { goto } from "$app/navigation";
   import IconTrash from "~icons/mdi/trash-can";
   import { enhance as svelteEnhance } from "$app/forms";
+  import DeleteEvent from "$lib/components/DeleteEvent.svelte";
 
   let { data }: PageProps = $props()
   const { eventId }= page.params
@@ -103,5 +104,8 @@
         </ul>
       {/if}
     </Card.Content>
+    <Card.Footer>
+      <DeleteEvent />
+    </Card.Footer>
   </Card.Root>
 </div>

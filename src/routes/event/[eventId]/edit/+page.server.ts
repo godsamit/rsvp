@@ -126,5 +126,21 @@ export const actions: Actions = {
     }
 
     return { success: true }
+  },
+  delete: async ({ params, cookies }) => {
+    const id = params.eventId;
+    const password = cookies.get(`auth_event_${id}`);
+
+    const { error: deleteError } = await supabase.rpc('host_remove_event', {
+      p_id: id,
+      p_password: password,
+    });
+
+    if (deleteError) {    
+      console.error(deleteError);
+      return fail(500, { message: deleteError.message });
+    }
+
+    return redirect(302, '/');
   }
 }

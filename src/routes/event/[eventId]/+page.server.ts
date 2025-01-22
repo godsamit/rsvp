@@ -75,10 +75,11 @@ export const actions: Actions = {
     const { data, error } = await supabase.rpc('validate_event_password', {
       event_id: eventId,
       input_password: password
-    })
+    });
 
     if (error || !data) {
-      return fail(403, { message: error, password });
+      console.log(error, data);
+      return fail(403, { message: error });
     }
 
     cookies.set(`auth_event_${eventId}`, password, {
@@ -86,7 +87,7 @@ export const actions: Actions = {
       httpOnly: true,
       maxAge: 3600 * 24,
       secure: process.env.NODE_ENV === 'production'
-    })
+    });
 
     throw redirect(303,`/event/${eventId}/edit`);
   },
@@ -109,7 +110,7 @@ export const actions: Actions = {
       input_id: eventId,
       input_password: password,
       input_name: name,
-    })
+    });
 
     if (error || !data) {
       return fail(403, { message: error });
