@@ -33,10 +33,15 @@
   })
   const { form: formData, enhance, delayed, message } = form
 
-  // get timezone and convert to UTC to store in database
-  const date = new Date($formData.date);
-  const localDate = new Date(date.getTime() - timezoneOffset * 60000).toISOString().slice(0, 16);
-  $formData.date = localDate;
+  $effect(() => {
+    // indicates form reload
+    if ($formData.date.length > 16) {
+      // get timezone and convert to UTC to store in database
+      const date = new Date($formData.date);
+      const localDate = new Date(date.getTime() - timezoneOffset * 60000).toISOString().slice(0, 16);
+      $formData.date = localDate;
+    }
+  })
 
   $effect(() => {
     utcDate = new Date($formData.date).toISOString()
@@ -45,21 +50,21 @@
   const file = fileProxy(formData, "picture")
 
 </script>
-<div class="w-3/5 lg:w-1/2 max-w-xl my-16 self-center">
-  <form method="POST" enctype="multipart/form-data" use:enhance>
-    <Card.Root class="my-16 p-4">
-      <Card.Header>
-        <Card.Title>Edit Your Event</Card.Title>
-      </Card.Header>
-      <Card.Content>
-        <div 
+<div class="w-9/10 sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 max-w-2xl self-center">
+  <Card.Root class="my-2 md:my-16  p-4">
+    <Card.Header>
+      <Card.Title>Edit Your Event</Card.Title>
+    </Card.Header>
+    <Card.Content>
+      <form method="POST" action="/event/{eventId}/edit?/update" enctype="multipart/form-data" use:enhance>
+        <div
           class={[
             "flex flex-col gap-2 relative",
             $delayed && "pointer-events-none"
           ]}
         >
           {#if $delayed}
-            <div class="absolute -p-6 top-0 left-0 w-full h-full bg-gray-200 opacity-50 z-10 flex items-center justify-center">            
+            <div class="absolute -p-6 top-0 left-0 w-full h-full bg-gray-200 opacity-50 z-10 flex items-center justify-center">
               <IconLoading font-size="3rem" class="mt-1/2 z-20 animate-spin" />
             </div>
           {/if}
@@ -76,23 +81,26 @@
             <IconSync /> Update Event
           </Form.Button>
         </div>
-        {#if data.attendees.length > 0}
-          <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees:</h1>
-          <ul class="py-4">
-            {#each data.attendees as attendee, index}
-            <li class={[
-              "px-2 py-1 flex justify-between items-center",
-              index % 2 !== 0 ? "bg-gray-100" : ""
-            ]}>
-              {attendee.name}
-                <Button size="icon" variant="destructive" class="w-6 h-6" title="Remove Attendance">
+      </form>
+      {#if data.attendees.length > 0}
+        <h1 class="text-2xl font-semibold mt-4 tracking-tight leading-none">Manage Attendees:</h1>
+        <ul class="py-4">
+          {#each data.attendees as attendee, index}
+            <form method="POST" action="/event/{eventId}/edit?/cancelAttendance" use:enhance>
+              <li class={[
+                "px-2 py-1 flex justify-between items-center",
+                index % 2 !== 0 ? "bg-gray-100" : ""
+              ]}>
+                {attendee.name}
+                <input type="hidden" name="attendee" value={attendee.name} />
+                <Button type="submit" size="icon" variant="destructive" class="w-6 h-6" title="Remove Attendance">
                   <IconTrash />
                 </Button>
               </li>
-            {/each}
-          </ul>
-        {/if}
-      </Card.Content>
-    </Card.Root>
-  </form>
+            </form>
+          {/each}
+        </ul>
+      {/if}
+    </Card.Content>
+  </Card.Root>
 </div>

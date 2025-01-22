@@ -1,10 +1,11 @@
 <script lang="ts">
   import AddToCalendarDropdown from "$lib/components/AddToCalendarDropdown.svelte";
   import EditEventConfirmDialog from "$lib/components/EditEventConfirmDialog.svelte";
-
+  import { Button } from "$lib/components/ui/button/index.js";
   import IconCalendar from "~icons/mdi/calendar";
   import IconLocation from "~icons/mdi/map-marker";
   import IconImage from "~icons/mdi/image";
+  import IconHome from "~icons/mdi/home";
   import SignUpForEventForm from "$lib/components/SignUpForEventForm.svelte";
 	import type { PageProps } from "./$types";
   import { page } from "$app/state";
@@ -22,22 +23,6 @@
   const needPassword = page.url.searchParams.get('needPassword');
   let editAuthOpen = $state(needPassword === 'true');
 
-  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-  function formatToLocalTime(utcDateStr: string, timeZone: string) {
-    const date = new Date(utcDateStr);
-    return new Intl.DateTimeFormat('en-US', {
-      timeZone: timeZone,
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      weekday: 'long',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    }).format(date);
-  }
-
   const googleMapsUrl = `https://www.google.com/maps/search/?q=${encodeURIComponent(data.event.address)}`;
   const mobileMapsUrl = `geo:0,0?q=${encodeURIComponent(data.event.address)}`;
 
@@ -49,7 +34,9 @@
     }
   };
 </script>
-
+<a class="fixed top-8 left-8 md:left-16 lg:left-30 xl:left-48 z-50 shadow-lg" href="/">
+  <Button size="icon"><IconHome /></Button>
+</a>
 {#if data.event}
 <div class="min-h-full w-full flex flex-col">
   <header class="flex-shrink-0">
@@ -64,14 +51,11 @@
   <section class="flex-1 w-9/10 sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto bg-white flex flex-col gap-4 p-6 md:p-8 lg:p-12 xl:p-16 shadow-sm">
     <div class="flex justify-between">
       <h1 class="text-2xl md:text-3xl font-bold">{data.event.title}</h1>
-      <div class="flex gap-2">
-        <EditEventConfirmDialog form={form} isOpen={editAuthOpen ?? false}/>
-        <AddToCalendarDropdown data={data} userTimeZone={userTimeZone} />
-      </div>
+      <EditEventConfirmDialog form={form} isOpen={editAuthOpen ?? false}/>
     </div>
     <div>
       <span class="flex gap-2 items-center"><IconCalendar />
-        <p><strong>Date:</strong> {formatToLocalTime(data.event.date, userTimeZone)}</p>
+        <p><strong>Date:</strong> <AddToCalendarDropdown data={data} /></p>
       </span> 
     </div>
     <div>

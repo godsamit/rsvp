@@ -114,6 +114,7 @@ export const actions: Actions = {
     if (error || !data) {
       return fail(403, { message: error });
     }
+
     const { error: sessionError } = await supabase.rpc('set_session_var', {
       key: 'app.password',
       value: password

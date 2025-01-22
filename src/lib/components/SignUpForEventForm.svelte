@@ -34,56 +34,58 @@
     action="/event/{eventId}?/attend" 
     use:enhance
   >
-    <h2 class="font-bold mb-2">Attend the Event</h2>
-    <div class="flex items-start gap-2">
-      <Form.Field 
-        {form} 
-        name="name"
-        class="basis-1/2"
-      >
-        <Form.Control>
-          {#snippet children({ props })}
-            <Form.Label>
-              Your Name
-              <span class="text-destructive">*</span>
-            </Form.Label>
-            <Input
-              {...props}
-              bind:value={$formData.name}
-              type="text"
-              placeholder="Your Name"
-            />
-          {/snippet}
-        </Form.Control>
-        <Form.FieldErrors />
-      </Form.Field>
-      <Form.Field 
-        {form} 
-        name="password"
-        class="basis-1/2"
-      >
-        <Form.Control>
-          {#snippet children({ props })}
-            <Form.Label>
-              Password (For Canceling)
-              <span class="text-destructive">*</span>
-            </Form.Label>
-            <Input
-              {...props}
-              bind:value={$formData.password}
-              type="password"
-              placeholder="Password: At least 4 characters"
-            />
-          {/snippet}
-        </Form.Control>
-        <Form.Description class="max-w-[50ch]">
-          If you change your mind later, you can use the password to delete your attendance.
-        </Form.Description>
-        <Form.FieldErrors />
-      </Form.Field>
-      <Form.Button class="mt-8" type="submit">
-        <IconAdd /> Attend
-      </Form.Button>
+    <div class="p-4 rounded-md border-input bg-accent border">
+      <h2 class="font-bold mb-2">Attend This Event</h2>
+      <div class="flex flex-col md:flex-row items-start gap-2">
+        <Form.Field 
+          {form} 
+          name="name"
+          class="w-full md:basis-1/2"
+        >
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>
+                Your Name
+                <span class="text-destructive">*</span>
+              </Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.name}
+                type="text"
+                placeholder="Your Name"
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.FieldErrors />
+        </Form.Field>
+        <Form.Field 
+          {form} 
+          name="password"
+          class="w-full md:basis-1/2"
+        >
+          <Form.Control>
+            {#snippet children({ props })}
+              <Form.Label>
+                Password (For Canceling)
+                <span class="text-destructive">*</span>
+              </Form.Label>
+              <Input
+                {...props}
+                bind:value={$formData.password}
+                type="password"
+                placeholder="Password: At least 4 characters"
+              />
+            {/snippet}
+          </Form.Control>
+          <Form.Description class="max-w-[50ch]">
+            If you change your mind later, you can use the password to delete your attendance.
+          </Form.Description>
+          <Form.FieldErrors />
+        </Form.Field>
+        <Form.Button class="mt-8" type="submit">
+          <IconAdd /> Attend
+        </Form.Button>
+      </div>
     </div>
   </form>
 {/if}

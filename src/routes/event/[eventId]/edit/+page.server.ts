@@ -40,7 +40,7 @@ export const load: PageServerLoad = async ({ params, cookies, fetch }) => {
 }
 
 export const actions: Actions = {
-  default: async ({ request, params, cookies }) => {
+  update: async ({ request, params, cookies }) => {
     const formData = await request.formData();
     const form = await superValidate(formData, zod(editEventSchema));
 
@@ -56,16 +56,6 @@ export const actions: Actions = {
     const password = cookies.get(`auth_event_${id}`);
     
     try {
-      const { error: sessionError } = await supabase.rpc('set_session_var', {
-        key: 'app.password',
-        value: password
-      });
-
-      if (sessionError) {
-        console.error('Error setting session variable:', sessionError);
-        return message(form, 'Failed to authenticate', { status: 403 });
-      }
-
       // Get the event to update (using title as identifier)
       const { data: existingEvent, error: fetchError } = await supabase
         .from('rsvp_event')
@@ -96,11 +86,15 @@ export const actions: Actions = {
         pictureUrl = publicUrl + `?t=${new Date().getTime()}`;
       }
 
-      // Update the event in the database
-      const { error: updateError } = await supabase
-        .from('rsvp_event')
-        .update({ id, title, detail, password, picture: pictureUrl, date: utcDate, address })
-        .eq('id', existingEvent.id);
+      const { error: updateError } = await supabase.rpc('update_event', {
+        p_id: id,
+        p_password: password,
+        p_title: title,
+        p_detail: detail,
+        p_picture: pictureUrl,
+        p_address: address,
+        p_date: utcDate
+      });
 
       if (updateError) {
         console.error(updateError);
@@ -112,5 +106,25 @@ export const actions: Actions = {
     }
 
     throw redirect(302, `/event/${id}`);
+  },
+  cancelAttendance: async ({ request, params, cookies }) => {
+    const formData = await request.formData();
+    const name = formData.get('attendee')?.toString();
+    
+    const id = params.eventId;
+    const password = cookies.get(`auth_event_${id}`);
+    
+    const { error: cancelError } = await supabase.rpc('host_remove_attendee', {
+      p_id: id,
+      p_password: password,
+      p_name: name,
+    });
+
+    if (cancelError) {
+      console.error(cancelError);
+      return fail(500, { message: cancelError.message });
+    }
+
+    return { success: true}
   }
 }
