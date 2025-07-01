@@ -50,7 +50,7 @@
       </div>
     {/if}
   </header>
-  <section class="flex-1 w-9/10 sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto bg-white flex flex-col gap-4 p-6 md:p-8 lg:p-12 xl:p-16 shadow-sm">
+  <section class="flex-1 max-w-full w-9/10 sm:w-4/5 md:w-3/4 lg:w-3/5 xl:w-1/2 mx-auto bg-white flex flex-col gap-4 p-6 md:p-8 lg:p-12 xl:p-16 shadow-sm">
     <div class="flex justify-between">
       <h1 class="text-2xl md:text-3xl font-bold">{data.event.title}</h1>
       <EditEventConfirmDialog form={form} isOpen={editAuthOpen ?? false}/>
@@ -72,7 +72,7 @@
           {/if}
       </span>
     </div>
-    <p class="whitespace-pre-wrap"> {data.event.detail ?? "The organizer has not provided details for this event."}</p>
+    <p class="whitespace-pre-wrap break-words"> {data.event.detail ?? "The organizer has not provided details for this event."}</p>
     <div class="flex flex-col justify-end gap-2">
       <p><strong>Attendees ({data.attendees.length ?? 0})</strong></p>
       {#if data.attendees.length === 0}

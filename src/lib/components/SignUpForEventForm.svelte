@@ -5,7 +5,7 @@
   import { participateEventSchema } from "../../routes/event/[eventId]/schema";
   import { superForm } from "sveltekit-superforms";
   import { zodClient } from "sveltekit-superforms/adapters";
-  import IconAdd from "~icons/mdi/plus";
+  import IconHand from "~icons/mdi/hand-front-right";
 
   let { data, eventId } = $props();
   let showForm = $state(false);
@@ -27,8 +27,8 @@
 </script>
 
 {#if !showForm}
-  <Button class="w-full" onclick={() => showForm = true}>
-    <IconAdd /> Attend This Event!
+  <Button class="w-full text-lg" onclick={() => showForm = true}>
+    <IconHand /> Attend This Event!
   </Button>
 {:else}
   <form
